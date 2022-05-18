@@ -1,33 +1,23 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { collection, query, where, limit, getDocs } from "firebase/firestore";
-import { db } from "../utils/firebase";
 import { useEffect, useState } from "react";
-import { AppProps, TCard } from "../components/TCard";
+import { Ticker, TCard } from "../components/TCard";
 
 const Home: NextPage = () => {
   const [data, setData] = useState<any>([]);
 
-  const q = query(collection(db, "GD"), limit(50));
-  useEffect(()=> {
-    console.log("test")
-    if (data.length === 0) {
-      const foo = async () => {
-    const querySnapshot = await getDocs(q);
-    var d: any = [];
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      d.push(doc.data());
-      console.log(doc.id, " => ", doc.data());
-    });
-    
-    setData([...d]);
-  };
-  foo();
-}
-  });
- 
+  useEffect(() => {
+    // GET request using fetch inside useEffect React hook
+    const f = async () => {
+      await fetch("http://localhost:3001")
+        .then((response) => response.json())
+        .then((data) => setData(data));
+    };
+    f();
+
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
+  }, [data]);
 
   return (
     <div className={styles.container}>
@@ -77,8 +67,8 @@ const Home: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className="absolute top-10 left-0 w-full grid grid-cols-3">
-            {data.map((obj: AppProps) => {
+          <div className="w-full grid grid-cols-8 gap-4">
+            {data.map((obj: Ticker) => {
               return (
                 <>
                   <TCard obj={obj}></TCard>

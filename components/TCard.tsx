@@ -1,4 +1,8 @@
-export interface AppProps {
+import { Change } from "./Change";
+import { ChangeV } from "./ChangeV";
+import { Volume } from "./Volume";
+
+export interface Ticker {
   T: string;
   v: number;
   vw: number;
@@ -11,18 +15,22 @@ export interface AppProps {
 }
 
 export interface Obj {
-  obj: AppProps;
+  obj: Ticker;
 }
 export const TCard = ({ obj }: Obj) => {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card w-full bg-green-100 shadow-xl">
       <div className="card-body">
-        <h2 className="card-title">{obj.T}</h2>
-        <p>{obj.v}</p>
-        <div className="card-actions justify-end">
-          <button className="btn btn-primary">Buy Now</button>
+        <h2 className="card-title">{obj.T}({obj.c})</h2>
+        
+        <div className="flex flex-row w-full">
+          
+          <Change o={obj.o} c={obj.c}></Change>
+          <ChangeV o={obj.o} c={obj.c}></ChangeV>
         </div>
+        <Volume v={obj.v}></Volume>
+
       </div>
     </div>
-  );
+  );  
 };
